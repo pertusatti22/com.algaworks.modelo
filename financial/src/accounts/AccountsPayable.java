@@ -1,5 +1,6 @@
 package accounts;
 
+import exception.AccountOperationException;
 import people.Provider;
 
 public class AccountsPayable extends Accounts {
@@ -22,13 +23,12 @@ public class AccountsPayable extends Accounts {
         System.out.println("|" + dueDate + "|" + super.accountsStatus + "|" + provider.getName() + "|" + description + "|" + value + "|");
     }
 
-    public void payAccount(){
+    public void payAccount() throws AccountOperationException {
         if(accountsStatus != AccountsStatus.PENDING){
-            System.out.println("A Conta " + this.description + " não pode ser paga!");
-        } else {
-            System.out.println("Descricao: " + description + " - Valor: " + value + " - Vencimento: " + dueDate + " - Fornecedor: " + provider.getName());
-            this.accountsStatus = AccountsStatus.PAYED;
+            throw new AccountOperationException("A conta não pode ser paga!");
         }
+        System.out.println("Descricao: " + description + " - Valor: " + value + " - Vencimento: " + dueDate + " - Fornecedor: " + provider.getName());
+        this.accountsStatus = AccountsStatus.PAYED;
     }
 
     public Provider getProvider() {

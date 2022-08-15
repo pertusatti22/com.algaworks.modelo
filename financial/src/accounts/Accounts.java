@@ -1,5 +1,7 @@
 package accounts;
 
+import exception.AccountOperationException;
+
 public abstract class Accounts {
     protected String description;
     protected Double value;
@@ -12,11 +14,14 @@ public abstract class Accounts {
 
     public abstract void showAccountDetails();
 
-    public void cancelAccount(){
-        if(accountsStatus == AccountsStatus.PENDING){
-            this.accountsStatus = AccountsStatus.CANCELED;
-            System.out.println("A conta " + this.description + " foi cancelada!");
+    public void cancelAccount() throws AccountOperationException {
+        if(accountsStatus == AccountsStatus.PAYED) {
+            throw new AccountOperationException("A conta já está paga!");
+        } else if(accountsStatus == AccountsStatus.CANCELED) {
+            throw new AccountOperationException("A conta já está cancelada!");
         }
+        this.accountsStatus = AccountsStatus.CANCELED;
+        System.out.println("A conta " + this.description + " foi cancelada!");
     }
 
     public String getDescription() {

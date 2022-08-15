@@ -2,6 +2,7 @@ import accounts.Accounts;
 import accounts.AccountsPayable;
 import accounts.AccountsReceivable;
 import accounts.AccountsStatement;
+import exception.AccountOperationException;
 import people.Customer;
 import people.Provider;
 
@@ -32,16 +33,20 @@ public class Main {
 
         AccountsPayable accountP3 = new AccountsPayable(realState, "Aluguel da filial", 700d, "11/05/2012");
 
-        // Paying pending account
-        accountP1.payAccount();
+        try {
+            accountP1.payAccount();
+            accountP2.cancelAccount();
+            accountP2.cancelAccount();
+        } catch (AccountOperationException e) {
+            System.out.println("Você executou uma operação ilegal: " + e.getMessage());
+        }
 
-        // Try Pay canceled Account
-        accountP2.cancelAccount();
-        accountP2.payAccount();
-
-        // Try duplicate payment
-        accountP3.payAccount();
-        accountP3.payAccount();
+        try {
+            accountP3.payAccount();
+            accountP3.payAccount();
+        } catch (AccountOperationException e) {
+            System.out.println("Você executou uma operação ilegal: " + e.getMessage());
+        }
 
         // Accounts Receivable
 
@@ -51,18 +56,20 @@ public class Main {
         accountR1.setDueDate("23/08/2022");
         accountR1.setCustomer(atacadista);
 
-        AccountsReceivable accountR2 = new AccountsReceivable(telecom, "Manutenção em sistema de conta online", 53200d, "13/08/2022");
+        AccountsReceivable accountR2 = new AccountsReceivable(telecom, "Manutenção em sistema de conta online", 55200d, "13/08/2022");
 
-        // Receivable and cancel
-
-        accountR1.receiveAccount();
-        accountR2.cancelAccount();
+        try {
+            accountR1.receiveAccount();
+            accountR2.cancelAccount();
+        } catch (AccountOperationException e) {
+            System.out.println("Você executou uma operação ilegal: " + e.getMessage());
+        }
 
         // Statements
 
         AccountsStatement statement = new AccountsStatement();
         Accounts[] accounts = new Accounts[]{accountP1,accountP2,accountP3,accountR1,accountR2};
 
-        statement.showAccountsList(accounts);
+        // statement.showAccountsList(accounts);
     }
 }

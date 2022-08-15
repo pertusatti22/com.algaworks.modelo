@@ -1,5 +1,6 @@
 package accounts;
 
+import exception.AccountOperationException;
 import people.Customer;
 
 public class AccountsReceivable extends Accounts{
@@ -21,23 +22,20 @@ public class AccountsReceivable extends Accounts{
         System.out.println("|" + dueDate + "|" + super.accountsStatus + "|" + customer.getName() + "|" + description + "|" + value + "|");
     }
 
-    public void receiveAccount(){
+    public void receiveAccount() throws AccountOperationException{
         if(accountsStatus != AccountsStatus.PENDING){
-            System.out.println("A Conta " + this.description + " não pode ser recebida!");
-        } else {
-            System.out.println("Descricao: " + description + " - Valor: " + value + " - Vencimento: " + dueDate + " - Cliente: " + customer.getName());
-            this.accountsStatus = AccountsStatus.PAYED;
+            throw new AccountOperationException("A conta não pode ser recebida!");
         }
+        System.out.println("Descricao: " + description + " - Valor: " + value + " - Vencimento: " + dueDate + " - Cliente: " + customer.getName());
+        this.accountsStatus = AccountsStatus.PAYED;
     }
 
     @Override
-    public void cancelAccount() {
-        if(value <= 50000){
-            super.cancelAccount();
-        } else {
-            System.out.println("A Conta " + this.description + " não pode ser cancelada, porque seu valor de " + this.value + " excede o limite permitido");
+    public void cancelAccount() throws AccountOperationException {
+        if(value > 50000) {
+            throw new AccountOperationException("A conta não pode ser cancelada, porque seu valor excede o limite permitido");
         }
-
+        super.cancelAccount();
     }
 
     public Customer getCustomer() {
